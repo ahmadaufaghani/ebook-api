@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,4 @@ use App\Http\Controllers\AuthorController;
 // Route::resource('siswacontroller', SiswaController::class);
 
 Route::resource('authors', AuthorController::class);
+Route::resource('books', BookController::class);
