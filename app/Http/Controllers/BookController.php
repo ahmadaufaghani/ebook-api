@@ -64,15 +64,16 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        $table = Book::findOrFail($id);
+        $table = Book::find($id);
 
         if($table) {
             return response()->json([
                 'message' => 'Data was found!',
                 'data' => $table
-            ]);
+            ], 200);
         } else {
             return response()->json([
+                'status' => 404,
                 'message' => 'Data not found!'
             ]);
         }
@@ -98,18 +99,26 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $table = Book::findOrFail($id);
-        $table->title = $request->title ? $request->title : $table->title;
-        $table->description = $request->description ? $request->description : $table->description;
-        $table->author = $request->author ? $request->author : $table->author;
-        $table->publisher = $request->publisher ? $request->publisher : $table->publisher;
-        $table->date_of_issue = $request->date_of_issue ? $request->date_of_issue : $table->date_of_issue;
-        $table->save();
+        $table = Book::find($id);
+        if($table) {
+            $table->title = $request->title ? $request->title : $table->title;
+            $table->description = $request->description ? $request->description : $table->description;
+            $table->author = $request->author ? $request->author : $table->author;
+            $table->publisher = $request->publisher ? $request->publisher : $table->publisher;
+            $table->date_of_issue = $request->date_of_issue ? $request->date_of_issue : $table->date_of_issue;
+            $table->save();
 
-        return response()->json([
-            'message' => 'Data updated successfully',
-            'data' => $table
-        ]);
+            return response()->json([
+                'message' => 'Data updated successfully',
+                'data' => $table
+            ], 201);
+        }
+        // } else {
+        //     return response()->json([
+        //         'status' => 404,
+        //         'message' => 'Data not found',
+        //     ]);
+        // }
     }
 
     /**
@@ -120,12 +129,18 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $table = Book::findOrFail($id);
-        $table->delete();
-
-        return response()->json([
-            "messages" => "Data deleted successfully!",
-            "data" => $table
-        ]);
+        $table = Book::find($id);
+        if($table) {
+            $table->delete();
+            return response()->json([
+                "messages" => "Data deleted successfully!",
+                "data" => $table
+            ]);
+        } else {
+            return response()->json([
+                "status" => 404,
+                "messages" => "Data not found!"
+            ]);
+        }
     }
 }
